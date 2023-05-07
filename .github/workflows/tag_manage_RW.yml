@@ -22,13 +22,13 @@ jobs:
       - id: dev
         if: github.ref != 'refs/heads/main'
         run: |
-          tag-manage create --min 0.1.1 --push -vv
-          GIT_TAG=$(tag-manage describe --default 0.0.0)
-          echo "GIT_TAG=v${GIT_TAG}" >> GIT_OUTPUT
+          echo $(( $RANDOM % 500000 + 600000 ))
+          GIT_TAG=$( echo $(( $RANDOM % 500000 + 600000 )))
+          echo "GIT_TAG=${GIT_TAG}" >> GIT_OUTPUT
 
       - id: prod
         if: github.ref == 'refs/heads/main'
         run: |
-          tag-manage create --min 0.1.1 --push -vv
-          GIT_TAG=$(tag-manage describe --default 0.0.0)
-          echo "GIT_TAG=v${GIT_TAG}" >> GIT_OUTPUT
+          echo $(( $RANDOM % 500000 + 600000 ))
+          GIT_TAG=$( echo $(( $RANDOM % 500000 + 600000 )))
+          echo "GIT_TAG=${GIT_TAG}" >> GIT_OUTPUT
