@@ -17,14 +17,6 @@ on:
 jobs:
   push-helm-chart:
     runs-on: ubuntu-latest
-    container: 
-      image: ghcr.io/hpe-cds/sc-containers-images/cds-go-dev:0.0.68-0-ga3d26f8
-      options: --user root
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      actions: read
-      contents: read
-      packages: read
     steps:
 
     - name: Checkout code
@@ -36,31 +28,3 @@ jobs:
         helm package ${{ inputs.helm_package }} \
           --version ${{ inputs.version }} \
           --app-version ${{ inputs.version }} \
-
-    - name: Setup env vars for Dev
-      run: |
-        echo "aws_account=676811841648" >> "$GITHUB_ENV"
-        echo "s3_bucket=cds-s3-artifacts-dev-helm-bucket" >> "$GITHUB_ENV"
-      if: github.ref != 'refs/heads/main'
-
-    - name: Setup env vars for Prod
-      run: |
-        echo "aws_account=123611844658" >> "$GITHUB_ENV"
-        echo "s3_bucket=cds-s3-artifacts-prod-helm-bucket" >> "$GITHUB_ENV"
-      if: github.ref == 'refs/heads/main'
-
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838
-      with:
-        role-to-assume: arn:aws:iam::${{ env.aws_account }}:role/cds_s3_artifacts_publish_role
-        aws-region: us-west-2
-        mask-aws-account-id: false
-
-    - name: Push to S3
-      shell: bash
-      run: |
-        ls
-        helm plugin install https://github.com/hypnoglow/helm-s3.git
-        helm repo add chart_repo s3://${{ env.s3_bucket }}
-        FILENAME="$(basename ${{ inputs.helm_package }}-${{ inputs.version }})"
-        helm s3 push $FILENAME.tgz chart_repo
