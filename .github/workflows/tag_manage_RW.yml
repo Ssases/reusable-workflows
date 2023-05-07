@@ -3,9 +3,9 @@ name: tag_manage
 on:
   workflow_call:
     outputs:
-      computed_tag_dev:
-         description: "The computed tag output string"
-         value: ${{ jobs.tag-manage.outputs.tag_version_dev }}
+      #computed_tag_dev:
+      #   description: "The computed tag output string"
+      #   value: ${{ jobs.tag-manage.outputs.tag_version_dev }}
       computed_tag_prod:
         description: "The computed tag output string"
         value: ${{ jobs.tag-manage.outputs.tag_version_prod }}
@@ -16,16 +16,16 @@ jobs:
  
    
     outputs:
-      tag_version_dev: ${{ steps.dev.outputs.GIT_TAG }}
+      #tag_version_dev: ${{ steps.dev.outputs.GIT_TAG }}
       tag_version_prod: ${{ steps.prod.outputs.GIT_TAG }}
 
     steps:
   
-      - id: dev
-        if: github.ref != 'refs/heads/main'
-        run: |
-          GIT_TAG=$( echo $(( $RANDOM % 500000 + 600000 )))
-          echo "GIT_TAG=$GIT_TAG" >> GITHUB_OUTPUT
+     # - id: dev
+    #    if: github.ref != 'refs/heads/main'
+     #   run: |
+     #     GIT_TAG=$( echo $(( $RANDOM % 500000 + 600000 )))
+     #     echo "GIT_TAG=$GIT_TAG" >> GITHUB_OUTPUT
 
       - id: prod
         if: github.ref == 'refs/heads/main'
