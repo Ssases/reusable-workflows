@@ -12,7 +12,7 @@ jobs:
     name: Generate Tag output
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/hpe-cds/sc-containers-images/cds-base:0.0.59-0-gcf964c3
+      image: nginx:latest
       options: --user root
 
    
