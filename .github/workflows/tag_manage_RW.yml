@@ -11,10 +11,7 @@ jobs:
   tag-manage:
     name: Generate Tag output
     runs-on: ubuntu-latest
-    container:
-      image: nginx:latest
-      options: --user root
-
+ 
    
     outputs:
       tag_version_dev: ${{ steps.dev.outputs.GIT_TAG }}
