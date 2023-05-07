@@ -3,10 +3,12 @@ name: tag_manage
 on:
   workflow_call:
     outputs:
-      computed_tag:
+      computed_tag_dev:
          description: "The computed tag output string"
-         value: ${{ jobs.tag-manage.outputs.tag_version }}
-
+         value: ${{ jobs.tag-manage.outputs.tag_version_dev }}
+      computed_tag_prod:
+        description: "The computed tag output string"
+        value: ${{ jobs.tag-manage.outputs.tag_version_prod }}
 jobs:
   tag-manage:
     name: Generate Tag output
@@ -24,11 +26,11 @@ jobs:
         run: |
           echo $(( $RANDOM % 500000 + 600000 ))
           GIT_TAG=$( echo $(( $RANDOM % 500000 + 600000 )))
-          echo "GIT_TAG=${GIT_TAG}" >> GIT_OUTPUT
+          echo "GIT_TAG=${GIT_TAG}" >> GITHUB_OUTPUT
 
       - id: prod
         if: github.ref == 'refs/heads/main'
         run: |
           echo $(( $RANDOM % 500000 + 600000 ))
           GIT_TAG=$( echo $(( $RANDOM % 500000 + 600000 )))
-          echo "GIT_TAG=${GIT_TAG}" >> GIT_OUTPUT
+          echo "GIT_TAG=${GIT_TAG}" >> GITHUB_OUTPUT
