@@ -1,0 +1,52 @@
+# Copyright 2023 Hewlett Packard Enterprise Development LP
+name: tag_manage
+on:
+  workflow_call:
+    outputs:
+      computed_tag:
+         description: "The computed tag output string"
+         value: ${{ jobs.tag-manage.outputs.tag_version }}
+
+permissions:
+  packages: read  # packages needed to read the build container
+
+
+
+jobs:
+  tag-manage:
+    name: Generate Tag output
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/hpe-cds/sc-containers-images/cds-base:0.0.59-0-gcf964c3
+      options: --user root
+
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      actions: read
+      contents: read
+      packages: read
+
+    outputs:
+      tag_version_dev: ${{ steps.dev.outputs.GIT_TAG }}
+      tag_version_prod: ${{ steps.prod.outputs.GIT_TAG }}
+
+    steps:
+      - name: git config
+        run: |
+          git config user.name cds-github-ci
+          git config user.email cds-github-ci@hpe.com
+          git config --global url."https://x-oauth-basic:${{ secrets.GITHUB_API_TOKEN }}@github.com/".insteadof https://github.com/
+
+      - id: dev
+        if: github.ref != 'refs/heads/main'
+        run: |
+          tag-manage create --min 0.1.1 --push -vv
+          GIT_TAG=$(tag-manage describe --default 0.0.0)
+          echo "GIT_TAG=v${GIT_TAG}" >> GIT_OUTPUT
+
+      - id: prod
+        if: github.ref == 'refs/heads/main'
+        run: |
+          tag-manage create --min 0.1.1 --push -vv
+          GIT_TAG=$(tag-manage describe --default 0.0.0)
+          echo "GIT_TAG=v${GIT_TAG}" >> GIT_OUTPUT
