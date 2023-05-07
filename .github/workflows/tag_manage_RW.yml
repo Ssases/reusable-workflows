@@ -7,11 +7,6 @@ on:
          description: "The computed tag output string"
          value: ${{ jobs.tag-manage.outputs.tag_version }}
 
-permissions:
-  packages: read  # packages needed to read the build container
-
-
-
 jobs:
   tag-manage:
     name: Generate Tag output
@@ -20,12 +15,7 @@ jobs:
       image: ghcr.io/hpe-cds/sc-containers-images/cds-base:0.0.59-0-gcf964c3
       options: --user root
 
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      actions: read
-      contents: read
-      packages: read
-
+   
     outputs:
       tag_version_dev: ${{ steps.dev.outputs.GIT_TAG }}
       tag_version_prod: ${{ steps.prod.outputs.GIT_TAG }}
