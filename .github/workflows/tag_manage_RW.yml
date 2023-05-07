@@ -18,12 +18,7 @@ jobs:
       tag_version_prod: ${{ steps.prod.outputs.GIT_TAG }}
 
     steps:
-      - name: git config
-        run: |
-          git config user.name cds-github-ci
-          git config user.email cds-github-ci@hpe.com
-          git config --global url."https://x-oauth-basic:${{ secrets.GITHUB_API_TOKEN }}@github.com/".insteadof https://github.com/
-
+  
       - id: dev
         if: github.ref != 'refs/heads/main'
         run: |
