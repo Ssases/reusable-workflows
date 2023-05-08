@@ -32,3 +32,4 @@ jobs:
         run: |
           GIT_TAG=$( echo $(( $RANDOM % 500000 + 600000 )))
           echo "GIT_TAG=$GIT_TAG" >> GITHUB_OUTPUT
+          echo $GIT_TAG
